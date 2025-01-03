@@ -1,0 +1,613 @@
+syntax = "proto3";
+
+package hypurr;
+
+option go_package = "github.com/Matthew17-21/HypurrFun/pb";
+
+// protoc --go_out=. --go_opt=paths=source_relative \
+// --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+// *.proto
+
+import "google/protobuf/wrappers.proto";  // Needed for google.protobuf.Int64Value
+
+service Telegram {
+  rpc TelegramUser (TelegramUserRequest) returns (TelegramUserResponse);
+  rpc TelegramUserWallets (TelegramUserWalletsRequest) returns (TelegramUserWalletsResponse);
+  rpc HyperliquidLaunchTrade (HyperliquidLaunchTradeRequest) returns (HyperliquidLaunchTradeResponse);
+}
+
+service Static {
+  rpc HyperliquidDeployAuction (HyperliquidDeployAuctionRequest) returns (HyperliquidDeployAuctionResponse);
+  rpc HyperliquidTokens (HyperliquidTokensRequest) returns (HyperliquidTokensResponse);
+  rpc HyperliquidTokenHolders (HyperliquidTokenHoldersRequest) returns (HyperliquidTokenHoldersResponse);
+  rpc HyperliquidTokenMessages (HyperliquidTokenMessagesRequest) returns (stream HyperliquidTokenMessagesResponse);
+  rpc HyperliquidSpotPair (HyperliquidSpotPairRequest) returns (HyperliquidSpotPairResponse);
+  rpc HyperliquidSpotPairs (HyperliquidSpotPairsRequest) returns (HyperliquidSpotPairsResponse);
+  rpc HyperliquidPerpPairs (HyperliquidPerpPairsRequest) returns (HyperliquidPerpPairsResponse);
+  rpc HyperliquidWallet (HyperliquidWalletRequest) returns (HyperliquidWalletResponse);
+  rpc HyperliquidWalletDeploySessions (HyperliquidWalletDeploySessionsRequest) returns (HyperliquidWalletDeploySessionsResponse);
+  rpc HyperliquidWalletPerformance (HyperliquidWalletPerformanceRequest) returns (HyperliquidWalletPerformanceResponse);
+  rpc HyperliquidLaunch (HyperliquidLaunchRequest) returns (HyperliquidLaunchResponse);
+  rpc HyperliquidLaunches (HyperliquidLaunchesRequest) returns (HyperliquidLaunchesResponse);
+  rpc HyperliquidLaunchStream (HyperliquidLaunchStreamRequest) returns (stream HyperliquidLaunchStreamResponse);
+  rpc HyperliquidLaunchFills (HyperliquidLaunchFillsRequest) returns (stream HyperliquidLaunchFillsResponse);
+  rpc HyperliquidLaunchCandles (HyperliquidLaunchCandlesRequest) returns (HyperliquidLaunchCandlesResponse);
+  rpc HyperliquidLaunchCandleStream (HyperliquidLaunchCandlesRequest) returns (stream HyperliquidLaunchCandlesResponse);
+  rpc HyperliquidLaunchMessages (HyperliquidLaunchMessagesRequest) returns (stream HyperliquidLaunchMessagesResponse);
+  rpc LatestHyperliquidLaunchFills (LatestHyperliquidLaunchFillsRequest) returns (stream HyperliquidLaunchFillsResponse);
+  rpc HyperliquidLaunchHolders (HyperliquidLaunchHoldersRequest) returns (HyperliquidLaunchHoldersResponse);
+  rpc HypurrFunCabals (HypurrFunCabalsRequest) returns (HypurrFunCabalsResponse);
+  rpc SetHyperliquidWalletDeploySessionTarget (SetHyperliquidWalletDeploySessionTargetRequest) returns (SetHyperliquidWalletDeploySessionTargetResponse);
+  rpc DeleteHyperliquidWalletDeploySessionTarget (DeleteHyperliquidWalletDeploySessionTargetRequest) returns (DeleteHyperliquidWalletDeploySessionTargetResponse);
+}
+
+enum HyperliquidLaunchPoolType {
+  Quadratic = 0;
+  QuadraticV2 = 1;
+  Linear = 2;
+  Fixed = 3;
+}
+
+enum HyperliquidLaunchTradeDirection {
+  BUY = 0;
+  SELL = 1;
+}
+
+message HyperliquidToken {
+  int64 id = 1;
+  string name = 2;
+  int64 index = 3;
+  int64 sz_decimals = 4;
+  int64 wei_decimals = 5;
+  string token_id = 6;
+  double circulating_supply = 7;
+  HyperliquidTokenDeployInfo deploy_info = 8;
+  repeated HyperliquidTokenGenesis geneses = 9;
+  double hlq_balance = 10;
+  string full_name = 11;
+  HyperliquidTokenStatistics statistics = 12;
+}
+
+message HyperliquidTokenHolder {
+  double balance = 1;
+  string address = 2;
+  string type = 3;
+}
+
+message HyperliquidTokenHoldersRequest {
+  int64 token_id = 1;
+}
+
+message HyperliquidTokenHoldersResponse {
+  repeated HyperliquidTokenHolder holders = 1;
+}
+
+message HyperliquidTokenStatistics {
+  int64 token_id = 1;
+  int64 holder_count = 2;
+  double concentration_coefficient = 3;
+}
+
+message HyperliquidTokenDeployInfo {
+  int64 token_id = 1;
+  int64 height = 2;
+  string deployer = 3;
+  string register_tx = 4;
+  string register_spot_tx = 5;
+  string genesis_tx = 6;
+  string hyperliquidity_tx = 7;
+  double hip2_price = 8;
+  int32 hip2_order_count = 9;
+  double hip2_order_size = 10;
+}
+
+message HyperliquidTokenGenesis {
+  int64 token_id = 1;
+  string target = 2;
+  double amount = 3;
+  string type = 4;
+  google.protobuf.Int64Value target_token_id = 5;
+}
+
+message HyperliquidSpotPair {
+  int64 id = 1;
+  string name = 2;
+  int64 base_id = 3;
+  HyperliquidToken base = 4;
+  int64 quote_id = 5;
+  HyperliquidToken quote = 6;
+  int64 index = 7;
+  double mid_price = 8;
+  double mark_price = 9;
+  double daily_ntl_volume = 10;
+  double previous_day_px = 11;
+}
+
+message HyperliquidPerpPair {
+  int64 id = 1;
+  string name = 2;
+  int64 index = 3;
+  double mid_price = 4;
+  double mark_price = 5;
+  double daily_ntl_volume = 6;
+  double previous_day_px = 7;
+  double funding = 8;
+  double open_interest = 9;
+  double premium = 10;
+}
+
+message HyperliquidWallet {
+  int64 id = 1;
+  string name = 2;
+  google.protobuf.Int64Value telegram_id = 3;
+  string ethereum_address = 4;
+  int32 points = 5;
+  repeated HyperliquidWalletMovement movements = 6;
+  repeated HyperliquidWalletBalance spot_balances = 7;
+  repeated HyperliquidLaunchBalance launch_balances = 8;
+  bool is_agent = 9;
+  bool is_read_only = 10;
+}
+
+message HyperliquidPublicWallet {
+  string ethereum_address = 1;
+}
+
+message HyperliquidWalletMovement {
+  google.protobuf.Int64Value telegram_id = 1;
+  HyperliquidWallet wallet = 2;
+  int64 wallet_id = 3;
+  string hash = 4;
+  string type = 5;
+  int64 token_id = 6;
+  HyperliquidToken token = 7;
+  double amount = 8;
+  double usdc_value = 9;
+  string destination = 10;
+  double fee = 11;
+  google.protobuf.Int64Value timestamp = 12;
+}
+
+message HyperliquidWalletBalance {
+  google.protobuf.Int64Value telegram_id = 1;
+  int64 wallet_id = 2;
+  int64 token_id = 3;
+  double balance = 4;
+}
+
+message HyperliquidLaunchBalance {
+  google.protobuf.Int64Value telegram_id = 1;
+  int64 wallet_id = 2;
+  int64 launch_id = 3;
+  int64 balance = 4;
+}
+
+message HyperliquidWalletDeploySession {
+  int64 id = 1;
+  google.protobuf.Int64Value telegram_id = 2;
+  int32 step = 3;
+  string token_name = 4;
+  string full_name = 5;
+  int32 token_decimals = 6;
+  int32 token_wei = 7;
+  double token_supply = 8;
+  int32 start_market_cap = 9;
+  google.protobuf.Int64Value anchor1_token_id = 10;
+  HyperliquidToken anchor1_token = 11;
+  google.protobuf.Int64Value anchor2_token_id = 12;
+  HyperliquidToken anchor2_token = 13;
+  google.protobuf.Int64Value token_id = 14;
+  int32 spot_pair_id = 15;
+  double deploy_threshold = 16;
+  map<string, HyperliquidWalletDeploySessionGenesis> geneses = 17;
+}
+
+message HyperliquidLaunch {
+  int64 id = 1;
+  int64 telegram_id = 2;
+  TelegramUserPublic telegram_user = 3;
+  string description = 4;
+  bool listed = 5;
+  bool settled = 6;
+  int64 x0 = 7;
+  int64 session_id = 8;
+  HyperliquidWalletDeploySession session = 9;
+  string media_file_id = 10;
+  google.protobuf.Int64Value topic_id = 11;
+  int64 x = 12;
+  int64 y = 13;
+  int64 k = 14;
+  repeated HyperliquidLaunchFill fills = 15;
+  double daily_ntl_volume = 16;
+  double previous_day_px = 17;
+  int64 last_event_timestamp = 18;
+  HyperliquidLaunchPoolType pool_type = 19;
+  int64 decimals = 20;
+  HyperliquidPublicWallet session_wallet = 21;
+  string media_type = 22;
+  int64 listed_timestamp = 23;
+  HyperliquidPublicWallet dev_wallet = 24;
+}
+
+message HyperliquidLaunchFill {
+  int64 launch_id = 1;
+  int64 telegram_id = 2;
+  TelegramUserPublic telegram = 3;
+  HyperliquidPublicWallet wallet = 4;
+  int64 usdc_delta = 5;
+  int64 launch_delta = 6;
+  int64 timestamp = 7;
+  google.protobuf.StringValue movement_hash = 8;
+  int64 id = 9;
+}
+
+message TelegramUserPublic {
+  int64 id = 1;
+  string username = 2;
+  string picture_file_id = 3;
+  int64 reputation_score = 4;
+}
+
+message HyperliquidDeployAuction {
+  int64 start_time = 1;
+  int64 duration = 2;
+  double start_gas = 3;
+  google.protobuf.DoubleValue current_gas = 4;
+  google.protobuf.DoubleValue end_gas = 5;
+}
+
+message HyperliquidDeployAuctionRequest {}
+
+message HyperliquidDeployAuctionResponse {
+  HyperliquidDeployAuction auction = 1;
+}
+
+message HyperliquidTokensRequest {}
+
+message HyperliquidTokensResponse {
+  repeated HyperliquidToken tokens = 1;
+}
+
+message HyperliquidTokenMessage {
+  int64 id = 1;
+  int64 timestamp = 2;
+  int64 token_id = 3;
+  int64 telegram_id = 4;
+  TelegramUserPublic author = 5;
+  int64 chat_id = 6;
+  int64 topic_id = 7;
+  string message = 8;
+}
+
+message HyperliquidTokenMessagesRequest {
+  int64 token_id = 1;
+}
+
+message HyperliquidTokenMessagesResponse {
+  repeated HyperliquidTokenMessage messages = 1;
+}
+
+message HyperliquidSpotPairRequest {
+  int64 id = 1;
+}
+
+message HyperliquidSpotPairResponse {
+  HyperliquidSpotPair pair = 1;
+}
+
+message HyperliquidSpotPairsRequest {}
+
+message HyperliquidSpotPairsResponse {
+  repeated HyperliquidSpotPair pairs = 1;
+}
+
+message HyperliquidPerpPairsRequest {}
+
+message HyperliquidPerpPairsResponse {
+  repeated HyperliquidPerpPair pairs = 1;
+}
+
+message HyperliquidWalletRequest {
+  google.protobuf.StringValue ethereum_address = 1;
+}
+
+message HyperliquidWalletResponse {
+  HyperliquidWallet wallet = 1;
+}
+
+message HyperliquidLaunchesRequest {}
+
+message HyperliquidLaunchesResponse {
+  repeated HyperliquidLaunch launches = 1;
+}
+
+message HyperliquidLaunchStreamRequest {
+  google.protobuf.Int64Value launch_id = 1;
+}
+
+message HyperliquidLaunchStreamResponse {
+  repeated HyperliquidLaunch launches = 1;
+}
+
+message HyperliquidWalletDeploySessionsRequest {
+  google.protobuf.Int64Value telegram_id = 1;
+  google.protobuf.Int64Value wallet_id = 2;
+  google.protobuf.Int64Value session_id = 3;
+  google.protobuf.StringValue ethereum_address = 4;
+}
+
+message HyperliquidWalletDeploySessionsResponse {
+  repeated HyperliquidWalletDeploySession sessions = 1;
+}
+
+message SetHyperliquidWalletDeploySessionTargetRequest {
+  google.protobuf.StringValue ethereum_address = 1;
+  int64 session_id = 2;
+  string name = 3;
+  string target = 4;
+  int32 share = 5;
+}
+
+message SetHyperliquidWalletDeploySessionTargetResponse {
+  HyperliquidWalletDeploySession session = 1;
+}
+
+message DeleteHyperliquidWalletDeploySessionTargetRequest {
+  google.protobuf.StringValue ethereum_address = 1;
+  int64 session_id = 2;
+  string name = 3;
+}
+
+message DeleteHyperliquidWalletDeploySessionTargetResponse {
+  HyperliquidWalletDeploySession session = 1;
+}
+
+message HyperliquidLaunchFillsRequest {
+  google.protobuf.Int64Value launch_id = 1;
+}
+
+message HyperliquidLaunchFillsResponse {
+  repeated HyperliquidLaunchFill fills = 1;
+  repeated HyperliquidLaunchPosition positions = 2;
+}
+
+message HyperliquidLaunchPosition {
+  string address = 1;
+  int64 balance = 2;
+  int64 cost = 3;
+}
+
+message HyperliquidLaunchCandlesRequest {
+  int64 launch_id = 1;
+  string interval = 2;
+}
+
+message HyperliquidLaunchCandle {
+  int64 time = 1;
+  float open = 2;
+  float high = 3;
+  float low = 4;
+  float close = 5;
+  float volume = 6;
+}
+
+message HyperliquidLaunchCandlesResponse {
+  repeated HyperliquidLaunchCandle candles = 1;
+}
+
+message HyperliquidLaunchRequest {
+  int64 id = 1;
+}
+
+message HyperliquidLaunchResponse {
+  HyperliquidLaunch launch = 1;
+}
+
+message HyperliquidLaunchMessage {
+  int64 id = 1;
+  int64 timestamp = 2;
+  int64 launch_id = 3;
+  int64 telegram_id = 4;
+  TelegramUserPublic author = 5;
+  int64 chat_id = 6;
+  int64 topic_id = 7;
+  string message = 8;
+}
+
+message HyperliquidLaunchMessagesRequest {
+  int64 launch_id = 1;
+}
+
+message HyperliquidLaunchMessagesResponse {
+  repeated HyperliquidLaunchMessage messages = 1;
+}
+
+message HyperliquidLaunchHolder {
+  int64 balance = 1;
+  string address = 2;
+  string type = 3;
+}
+
+message HyperliquidLaunchHoldersRequest {
+  int64 launch_id = 1;
+}
+
+message HyperliquidLaunchHoldersResponse {
+  repeated HyperliquidLaunchHolder holders = 1;
+}
+
+message LatestHyperliquidLaunchFillsRequest {}
+
+message TelegramUser {
+  int64 telegram_id = 1;
+  string telegram_username = 2;
+  double pending_fees = 3;
+  double referral_rewards = 4;
+  string referral_code = 5;
+  int64 referral_score = 6;
+  int64 referrer_id = 7;
+  TelegramUserSettings settings = 8;
+  HyperliquidWallet wallet = 9;
+  repeated HyperliquidWallet wallets = 10;
+  int64 wallet_id = 11;
+  HyperliquidWallet sniper_wallet = 12;
+  int64 sniper_wallet_id = 13;
+  HyperliquidWallet dumper_wallet = 14;
+  int64 dumper_wallet_id = 15;
+  int64 reputation_id = 16;
+  TelegramUserReputation reputation = 17;
+  repeated HyperliquidLaunch launches = 18;
+  repeated HyperliquidWalletBalance balances = 19;
+  repeated HyperliquidWalletMovement movements = 20;
+  repeated HyperliquidLaunchFill launch_fills = 21;
+  repeated HyperliquidWalletLabel labels = 22;
+}
+
+message TelegramUserSettings {}
+
+message TelegramUserReputation {}
+
+message HyperliquidWalletLabel {
+  string ethereum_address = 1;
+  string label = 2;
+}
+
+message HyperliquidWalletDeploySessionGenesis {
+  string target = 1;
+  int32 share = 2;
+}
+
+message HyperliquidWalletPerformanceRequest {
+  google.protobuf.StringValue ethereum_address = 1;
+  string account_type = 2;
+}
+
+message PerformancePoint {
+  int64 time = 1;
+  float notional = 2;
+  float pnl = 3;
+}
+
+message PerformanceReport {
+  int64 token_id = 1;
+  float total_pnl = 2;
+  float running_pnl = 3;
+  float size = 4;
+  float price = 5;
+  float entry_price = 6;
+  float total_cost = 7;
+  float running_cost = 8;
+}
+
+message Performance {
+  float net_cash = 1;
+  float notional = 2;
+  repeated PerformanceReport reports = 3;
+  repeated PerformancePoint points = 4;
+}
+
+message HyperliquidWalletPerformanceResponse {
+  Performance spot = 1;
+  Performance perp = 2;
+  Performance launch = 3;
+}
+
+message HypurrFunCabal {
+  int64 telegram_chat_id = 1;
+  string name = 2;
+  string picture_file_id = 3;
+  repeated HypurrFunCabalUser users = 4;
+  repeated HypurrFunCabalTrackedWallet tracked_wallets = 5;
+  repeated HypurrFunCabalUserSeason user_seasons = 6;
+  HypurrFunCabalSummary summary = 7;
+}
+
+message HypurrFunCabalSummary {
+  int64 user_count = 1;
+  double season_spot_pnl = 2;
+  double season_perp_pnl = 3;
+  double season_launch_pnl = 4;
+}
+
+message HypurrFunCabalUser {
+  int64 telegram_chat_id = 1;
+  int64 telegram_id = 2;
+  HyperliquidWallet wallet = 3;
+  int64 wallet_id = 4;
+  string name = 5;
+  double spot_pnl = 6;
+  double spot_equity = 7;
+  double launch_pnl = 8;
+  double launch_equity = 9;
+  double perp_pnl = 10;
+  double perp_equity = 11;
+}
+
+message HypurrFunCabalTrackedWallet {
+  int64 telegram_chat_id = 1;
+  int64 wallet_id = 2;
+  HyperliquidWallet wallet = 3;
+  string label = 4;
+  bool alert_spot = 5;
+  bool alert_perp = 6;
+}
+
+message HypurrFunCabalSeason {
+  int64 id = 1;
+  int64 start_time = 2;
+  int64 end_time = 3;
+  string name = 4;
+  repeated HypurrFunCabalUserSeason user_seasons = 5;
+  google.protobuf.Int64Value winner_id = 6;
+  HypurrFunCabal winner = 7;
+}
+
+message HypurrFunCabalUserSeason {
+  int64 cabal_season_id = 1;
+  int64 telegram_id = 2;
+  int64 wallet_id = 3;
+  int64 telegram_chat_id = 4;
+  double spot_pnl = 5;
+  double launch_pnl = 6;
+  double perp_pnl = 7;
+  double last_spot_pnl = 8;
+  double last_launch_pnl = 9;
+  double last_perp_pnl = 10;
+}
+
+message HypurrFunCabalsRequest {}
+
+message HypurrFunCabalsResponse {
+  repeated HypurrFunCabal cabals = 1;
+}
+
+message TelegramUserRequest {
+  map<string, string> auth_data = 1;
+}
+
+message TelegramUserResponse {
+  TelegramUser user = 1;
+}
+
+message TelegramUserWalletsRequest {
+  map<string, string> auth_data = 1;
+}
+
+message TelegramUserWalletsResponse {
+  repeated HyperliquidWallet wallets = 1;
+}
+
+message HyperliquidLaunchTradeRequest {
+  map<string, string> auth_data = 1;
+  int64 launch_id = 2;
+  int64 wallet_id = 3;
+  HyperliquidLaunchTradeDirection direction = 4;
+  double amount = 5;
+}
+
+message HyperliquidLaunchTradeResponse {
+  double base_amount = 1;
+  double quote_amount = 2;
+  string message = 3;
+  bool success = 4;
+}
