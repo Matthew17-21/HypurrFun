@@ -93,3 +93,8 @@ When using AI tools to convert the JavaScript classes to protobuf format, they m
 import "google/protobuf/wrappers.proto";
 // Add other required imports
 ```
+
+## TODOs
+
+- [ ] Tests
+  - [ ] Tests for the `hypurr_utils` package
