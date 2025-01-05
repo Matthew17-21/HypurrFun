@@ -14,7 +14,7 @@ import (
 // Returns:
 //   - string: The value of the environment variable if found
 //   - error: An error if the environment variable is not set
-func getValFromEnv(key string) (string, error) {
+func GetValFromEnv(key string) (string, error) {
 	url, exists := os.LookupEnv(key)
 	if !exists {
 		return "", fmt.Errorf("no webhook found in the %q env var", key)
