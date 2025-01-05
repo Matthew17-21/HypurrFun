@@ -48,7 +48,7 @@ func TestGetValFromEnv(t *testing.T) {
 			}
 
 			// Execute test
-			got, err := getValFromEnv(tt.key)
+			got, err := GetValFromEnv(tt.key)
 
 			// Check error condition
 			if (err != nil) != tt.wantErr {
@@ -79,7 +79,7 @@ func TestGetValFromEnvWithSpecialCharacters(t *testing.T) {
 	defer os.Unsetenv(key)
 
 	// Execute
-	got, err := getValFromEnv(key)
+	got, err := GetValFromEnv(key)
 
 	// Verify
 	if err != nil {

@@ -6,6 +6,8 @@ import (
 	"github.com/Matthew17-21/HypurrFun/pb"
 )
 
+const NotAvailble = "Not Available"
+
 // LaunchExtended extends the protobuf HyperliquidLaunch message with additional computed fields
 type LaunchExtended struct {
 	*pb.HyperliquidLaunch
