@@ -11,7 +11,7 @@ import (
 
 // Webhook constants
 const (
-	webhookColor          = 166380 // Hperliquid green
+	webhookColor          = 271647 // Hperliquid green
 	webhookTitleNewLaunch = "New hypurr.fun launch!"
 	webhookUsername       = "Hypurr.fun Monitor"
 	webhookAvatarURL      = "https://pbs.twimg.com/profile_images/1646991609416806408/vKLEZxhh_400x400.png"
