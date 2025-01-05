@@ -28,6 +28,42 @@ func ToLaunchExtended(hl *pb.HyperliquidLaunch) *LaunchExtended {
 	}
 }
 
+// LaunchSlice represents a slice of HyperliquidLaunch pointers that can be sorted.
+// It implements the basic methods required by sort.Interface.
+type LaunchSlice []*pb.HyperliquidLaunch
+
+// Len returns the length of the LaunchSlice.
+// This is part of sort.Interface implementation.
+func (l LaunchSlice) Len() int { return len(l) }
+
+// Swap exchanges the elements with indexes i and j.
+// This is part of sort.Interface implementation.
+func (l LaunchSlice) Swap(i, j int) { l[i], l[j] = l[j], l[i] }
+
+// SortByLastActivity is a wrapper around LaunchSlice that implements
+// sort.Interface to sort launches by their LastEventTimestamp in ascending order
+// (oldest first).
+type SortByLastActivity struct{ LaunchSlice }
+
+// Less reports whether the launch at index i should sort before the launch at index j.
+// It compares LastEventTimestamp values in ascending order.
+// This is part of sort.Interface implementation.
+func (s SortByLastActivity) Less(i, j int) bool {
+	return s.LaunchSlice[i].LastEventTimestamp < s.LaunchSlice[j].LastEventTimestamp
+}
+
+// SortByListedTimestamp is a wrapper around LaunchSlice that implements
+// sort.Interface to sort launches by their ListedTimestamp in ascending order
+// (oldest first).
+type SortByListedTimestamp struct{ LaunchSlice }
+
+// Less reports whether the launch at index i should sort before the launch at index j.
+// It compares ListedTimestamp values in ascending order.
+// This is part of sort.Interface implementation.
+func (s SortByListedTimestamp) Less(i, j int) bool {
+	return s.LaunchSlice[i].ListedTimestamp < s.LaunchSlice[j].ListedTimestamp
+}
+
 // UnixMilliToTime converts Unix milliseconds timestamp to time.Time
 func unixMilliToTime(msTimestamp int64) time.Time {
 	return time.UnixMilli(msTimestamp) //.UTC()
