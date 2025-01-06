@@ -25,4 +25,4 @@ go.work.sum
 .env
 
 # Reverse engineering specifics
-reverse_engineering/decode
+reverse_engineering
