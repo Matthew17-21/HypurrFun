@@ -20,8 +20,19 @@ This project allows you to monitor and interact releases on HypurrFun by reverse
 
 To use the new project monitor, you can simply use Docker to build and run the image. To do so, use:
 
+Build the image:
+
 ```bash
 docker build -t hypurr-project-monitor:latest .
+```
+
+Run the image:
+
+```bash
+docker run -d -i \
+-e NEW_LAUNCHES_WEBHOOK=${WEBHOOL_URL_HERE} \
+--name hypurr-new-releases hypurr-project-monitor:latest
+
 ```
 
 ### Manually
