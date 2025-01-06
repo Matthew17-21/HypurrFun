@@ -46,8 +46,6 @@ go run cmd/new-project-monitor/main.go
 
 ### Integration
 
-#### Other Apps
-
 #### Go Integration
 
 To use this library in your own Go program, simply follow these steps:
